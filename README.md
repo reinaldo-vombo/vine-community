@@ -1,7 +1,7 @@
 <div align="center">
   <br />
     <a href="https://community.vine.ao" target="_blank">
-      <img src="./public/assets/vine-high-resolution-logo.png" alt="Vine community logo">
+      <img src="./public/assets/vine-high-resolution-logo-black-transparent.png" alt="Vine community logo">
     </a>
   <br />
 
