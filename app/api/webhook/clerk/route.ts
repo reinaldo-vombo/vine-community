@@ -1,13 +1,12 @@
-/* eslint-disable camelcase */
 // Resource: https://clerk.com/docs/users/sync-data-to-your-backend
 // Above article shows why we need webhooks i.e., to sync data to our backend
 
 // Resource: https://docs.svix.com/receiving/verifying-payloads/why
 // It's a good practice to verify webhooks. Above article shows why we should do it
-import { Webhook, WebhookRequiredHeaders } from "svix";
+import { Webhook, type WebhookRequiredHeaders } from "svix";
 import { headers } from "next/headers";
 
-import { IncomingHttpHeaders } from "http";
+import type { IncomingHttpHeaders } from "node:http";
 
 import { NextResponse } from "next/server";
 import {
@@ -59,6 +58,7 @@ export const POST = async (request: Request) => {
     return NextResponse.json({ message: err }, { status: 400 });
   }
 
+  // biome-ignore lint/style/noNonNullAssertion: <explanation>
   const eventType: EventType = evnt?.type!;
 
   // Listen organization creation event
@@ -117,6 +117,7 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organization-Memberships#operation/CreateOrganizationMembership
       // Show what evnt?.data sends from above resource
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: <explanation>
       const { organization, public_user_data } = evnt?.data;
       console.log("created", evnt?.data);
 
@@ -142,6 +143,7 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organization-Memberships#operation/DeleteOrganizationMembership
       // Show what evnt?.data sends from above resource
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: <explanation>
       const { organization, public_user_data } = evnt?.data;
       console.log("removed", evnt?.data);
 
@@ -164,6 +166,7 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/UpdateOrganization
       // Show what evnt?.data sends from above resource
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: <explanation>
       const { id, logo_url, name, slug } = evnt?.data;
       console.log("updated", evnt?.data);
 
@@ -186,6 +189,7 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/DeleteOrganization
       // Show what evnt?.data sends from above resource
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: <explanation>
       const { id } = evnt?.data;
       console.log("deleted", evnt?.data);
 
