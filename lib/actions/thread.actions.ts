@@ -85,7 +85,7 @@ export async function createThread({ text, author, communityId, path }: Params
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to create thread: ${error.message}`);
+    throw new Error(`Falha ao criar thread: ${error.message}`);
   }
 }
 
@@ -109,7 +109,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
     const mainThread = await Thread.findById(id).populate("author community");
 
     if (!mainThread) {
-      throw new Error("Thread not found");
+      throw new Error("Thread não encontrada");
     }
 
     // Fetch all child threads and their descendants recursively
@@ -153,7 +153,7 @@ export async function deleteThread(id: string, path: string): Promise<void> {
 
     revalidatePath(path);
   } catch (error: any) {
-    throw new Error(`Failed to delete thread: ${error.message}`);
+    throw new Error(`Falha ao excluir thread: ${error.message}`);
   }
 }
 
@@ -196,7 +196,7 @@ export async function fetchThreadById(threadId: string) {
     return thread;
   } catch (err) {
     console.error("Error while fetching thread:", err);
-    throw new Error("Unable to fetch thread");
+    throw new Error("Não é possivel buscar a thread");
   }
 }
 
@@ -213,7 +213,7 @@ export async function addCommentToThread(
     const originalThread = await Thread.findById(threadId);
 
     if (!originalThread) {
-      throw new Error("Thread not found");
+      throw new Error("Thread não encontrada");
     }
 
     // Create the new comment thread
@@ -235,6 +235,6 @@ export async function addCommentToThread(
     revalidatePath(path);
   } catch (err) {
     console.error("Error while adding comment:", err);
-    throw new Error("Unable to add comment");
+    throw new Error("Não é possivel adicionar comentário");
   }
 }

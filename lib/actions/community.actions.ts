@@ -23,7 +23,7 @@ export async function createCommunity(
     const user = await User.findOne({ id: createdById });
 
     if (!user) {
-      throw new Error("User not found"); // Handle the case if the user with the id is not found
+      throw new Error("Utilizador não encontrado"); // Handle the case if the user with the id is not found
     }
 
     const newCommunity = new Community({
@@ -170,19 +170,19 @@ export async function addMemberToCommunity(
     const community = await Community.findOne({ id: communityId });
 
     if (!community) {
-      throw new Error("Community not found");
+      throw new Error("Comunidade não encontrada");
     }
 
     // Find the user by their unique id
     const user = await User.findOne({ id: memberId });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("Utilizador não encontrado");
     }
 
     // Check if the user is already a member of the community
     if (community.members.includes(user._id)) {
-      throw new Error("User is already a member of the community");
+      throw new Error("Este utilizador já é um membro da comunidade");
     }
 
     // Add the user's _id to the members array in the community
@@ -215,11 +215,11 @@ export async function removeUserFromCommunity(
     );
 
     if (!userIdObject) {
-      throw new Error("User not found");
+      throw new Error("Utilizador não encontrado");
     }
 
     if (!communityIdObject) {
-      throw new Error("Community not found");
+      throw new Error("Comunidade não encontrada");
     }
 
     // Remove the user's _id from the members array in the community
@@ -258,7 +258,7 @@ export async function updateCommunityInfo(
     );
 
     if (!updatedCommunity) {
-      throw new Error("Community not found");
+      throw new Error("Comunidade não encontrada");
     }
 
     return updatedCommunity;
@@ -279,7 +279,7 @@ export async function deleteCommunity(communityId: string) {
     });
 
     if (!deletedCommunity) {
-      throw new Error("Community not found");
+      throw new Error("Comunidade não encontrada");
     }
 
     // Delete all threads associated with the community
