@@ -48,6 +48,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
           <div className='flex items-center'>
             {members.map((member, index) => (
               <Image
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 key={index}
                 src={member.image}
                 alt={`user_${index}`}
