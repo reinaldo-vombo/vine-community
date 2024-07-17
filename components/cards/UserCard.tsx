@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '../ui/button'
+import { Eye } from 'lucide-react'
 
 interface Props {
 	id: string
@@ -17,10 +18,9 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
 	const router = useRouter()
 
 	const isCommunity = personType === 'Community'
-
 	return (
 		<article className='user-card'>
-			<div className='user-card_avatar'>
+			<div className='user-card_avatar cursor-pointer'>
 				<div className='relative h-12 w-12'>
 					<Image src={imgUrl} alt='user_logo' fill className='rounded-full object-cover' />
 				</div>
@@ -32,7 +32,7 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
 			</div>
 
 			<Button
-				className='user-card_btn'
+				className='bg-primary-500'
 				onClick={() => {
 					if (isCommunity) {
 						router.push(`/communities/${id}`)
@@ -41,7 +41,7 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
 					}
 				}}
 			>
-				Visualizar
+				<Eye width={17} />
 			</Button>
 		</article>
 	)

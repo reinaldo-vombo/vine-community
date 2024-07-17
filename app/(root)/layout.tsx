@@ -1,6 +1,7 @@
 import type React from 'react'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { ptPT } from "@clerk/localizations"
+import { Roboto } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
 
@@ -8,9 +9,14 @@ import '../globals.css'
 import LeftSidebar from '@/components/shared/LeftSidebar'
 import Bottombar from '@/components/shared/Bottombar'
 import RightSidebar from '@/components/shared/RightSidebar'
-import Topbar from '@/components/shared/Topbar'
 
-const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto({
+	subsets: ['latin'],
+	weight: ['100', '300', '500'],
+	style: 'normal',
+	display: 'swap',
+	variable: '--roboto'
+})
 
 export const metadata: Metadata = {
 	title: 'Vine Community',
@@ -36,15 +42,17 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
+
 	return (
 		<ClerkProvider
+			localization={ptPT}
 			appearance={{
 				baseTheme: dark,
 			}}
 		>
 			<html lang='pt'>
-				<body className={inter.className}>
-					<Topbar />
+				<body className={roboto.className}>
+					{/* <Topbar /> */}
 
 					<main className='flex flex-row'>
 						<LeftSidebar />

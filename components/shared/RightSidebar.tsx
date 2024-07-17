@@ -1,9 +1,11 @@
-import { currentUser } from '@clerk/nextjs'
+import { currentUser, SignedIn, SignOutButton } from '@clerk/nextjs'
 
 import UserCard from '../cards/UserCard'
 
 import { fetchCommunities } from '@/lib/actions/community.actions'
 import { fetchUsers } from '@/lib/actions/user.actions'
+import Image from 'next/image'
+import OrganizationSwitcher from './OrganizationSwitcher'
 
 async function RightSidebar() {
 	const user = await currentUser()
@@ -18,10 +20,24 @@ async function RightSidebar() {
 
 	return (
 		<section className='custom-scrollbar rightsidebar'>
+			<div className='flex items-center gap-1'>
+				<div className='block md:hidden'>
+					<SignedIn>
+						<SignOutButton>
+							<div className='flex cursor-pointer'>
+								<Image src='/assets/logout.svg' alt='logout' width={24} height={24} />
+							</div>
+						</SignOutButton>
+					</SignedIn>
+				</div>
+
+				<OrganizationSwitcher />
+			</div>
+
 			<div className='flex flex-1 flex-col justify-start'>
 				<h3 className='text-heading4-medium text-light-1'>Comunidades Sugeridas</h3>
 
-				<div className='mt-7 flex w-[350px] flex-col gap-9'>
+				<div className='mt-7 flex flex-col gap-9'>
 					{suggestedCOmmunities.communities.length > 0 ? (
 						<>
 							{suggestedCOmmunities.communities.map((community) => (
@@ -43,7 +59,7 @@ async function RightSidebar() {
 
 			<div className='flex flex-1 flex-col justify-start'>
 				<h3 className='text-heading4-medium text-light-1'>Ideias Similares</h3>
-				<div className='mt-7 flex w-[350px] flex-col gap-10'>
+				<div className='mt-7 flex flex-col gap-10'>
 					{similarMinds.users.length > 0 ? (
 						<>
 							{similarMinds.users.map((person) => (

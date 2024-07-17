@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/localizations": "^2.4.6",
     "@clerk/nextjs": "^4.21.15",
     "@clerk/themes": "^1.7.5",
     "@hookform/resolvers": "^3.1.1",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-menubar": "^1.0.3",
+    "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
@@ -35,7 +37,6 @@
     "mongoose": "^7.3.4",
     "next": "^14.2.5",
     "postcss": "^8.4.39",
-    "prettier": "^3.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.1",
