@@ -1,11 +1,11 @@
-import { currentUser, SignedIn, SignOutButton } from '@clerk/nextjs'
+import { currentUser, OrganizationSwitcher, SignedIn, SignOutButton } from '@clerk/nextjs'
 
 import UserCard from '../cards/UserCard'
 
 import { fetchCommunities } from '@/lib/actions/community.actions'
 import { fetchUsers } from '@/lib/actions/user.actions'
 import Image from 'next/image'
-import OrganizationSwitcher from './OrganizationSwitcher'
+import OrganizationSwitcherr from './OrganizationSwitcher'
 
 async function RightSidebar() {
 	const user = await currentUser()
@@ -31,6 +31,7 @@ async function RightSidebar() {
 					</SignedIn>
 				</div>
 
+				<OrganizationSwitcherr />
 				<OrganizationSwitcher />
 			</div>
 

@@ -3,7 +3,7 @@ import {
    PopoverContent,
    PopoverTrigger,
 } from "@/components/ui/popover"
-import { Plus } from "lucide-react"
+import CreateComunity from "./CreateComunity"
 
 
 const OrganizationSwitcher = () => {
@@ -40,10 +40,7 @@ const OrganizationSwitcher = () => {
                {user.organization.length > 0 ? user.organization.map((item) => (
                   <div key={item.id}></div>
                )) : <></>}
-               <div className="createComunity">
-                  <Plus width={15} />
-                  <p>Criar comunidade</p>
-               </div>
+               <CreateComunity />
             </div>
          </PopoverContent>
       </Popover>
