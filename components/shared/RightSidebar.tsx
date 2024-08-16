@@ -30,9 +30,11 @@ async function RightSidebar() {
 						</SignOutButton>
 					</SignedIn>
 				</div>
+				<div>
+					<OrganizationSwitcherr />
+					<OrganizationSwitcher />
 
-				<OrganizationSwitcherr />
-				<OrganizationSwitcher />
+				</div>
 			</div>
 
 			<div className='flex flex-1 flex-col justify-start'>

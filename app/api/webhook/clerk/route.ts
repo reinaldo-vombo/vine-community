@@ -122,7 +122,8 @@ export const POST = async (request: Request) => {
       console.log("created", evnt?.data);
 
       // @ts-ignore
-      await addMemberToCommunity(organization.id, public_user_data.user_id);
+      // await addMemberToCommunity(organization.id, public_user_data.user_id);
+      await addMemberToCommunity('111233', public_user_data.user_id);
 
       return NextResponse.json(
         { message: "Invitation accepted" },

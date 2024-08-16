@@ -94,26 +94,26 @@
     @apply sticky right-[41px] top-[28px] rounded-lg z-20 flex h-[93vh] w-[17rem] flex-col justify-between gap-12 overflow-auto border-l border-l-dark-4 bg-dark-2 px-4 pb-6 pt-7 max-xl:hidden;
   }
   .OrganizationSwitcher {
-    @apply rounded-lg text-center text-white p-2 flex items-center gap-4
+    @apply rounded-lg text-center text-white p-2 flex items-center gap-4 w-full
   }
   .OrganizationSwitcherContent {
-    @apply bg-[#19191a] rounded-2xl py-6
+    @apply bg-[#19191a] rounded-2xl py-6 
   }
   .oragenization {
     @apply flex items-center justify-start gap-4 
   }
   .comunityBox {
-    @apply p-2 w-10 h-10 bg-blue rounded-lg flex items-center justify-center text-white
+    @apply p-2 w-8 h-8 bg-blue rounded-lg flex items-center justify-center text-white
   }
   .comunityContent {
     @apply bg-[#19191a] text-white py-6 rounded-2xl border-none space-y-5 text-[12px]
   }
 
   .comunity {
-    @apply border-y border-slate-600 py-4
+    @apply border-y border-gray-1 py-4
   }
   .createComunity {
-    @apply flex gap-6 justify-start items-center cursor-pointer text-gray-400 hover:bg-[#ffffff0a] transition-colors p-2
+    @apply flex gap-6 justify-start items-center cursor-pointer text-gray-400 hover:bg-[#ffffff0a] transition-colors p-2 rounded-md
   }
 }
 

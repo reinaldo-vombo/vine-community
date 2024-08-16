@@ -4,6 +4,7 @@ import {
    PopoverTrigger,
 } from "@/components/ui/popover"
 import CreateComunity from "./CreateComunity"
+import { ChevronDown, ChevronUp } from "lucide-react"
 
 
 const OrganizationSwitcher = () => {
@@ -26,7 +27,11 @@ const OrganizationSwitcher = () => {
             <div className="comunityBox">
                {name}
             </div>
-            <p className="text-[12px]">Conta pessoal</p>
+            <p className="text-[14px]">Conta pessoal</p>
+            <div>
+               <ChevronUp width={15} height={15} className="text-gray-600" />
+               <ChevronDown width={15} height={15} className="text-gray-600" />
+            </div>
          </PopoverTrigger>
          {/* if add this classes to css class it will be overwriten by PopoverContent default style */}
          <PopoverContent className="bg-[#19191a] text-white py-6 rounded-2xl border-none space-y-5 text-[12px]">
@@ -34,7 +39,7 @@ const OrganizationSwitcher = () => {
                <div className="comunityBox">
                   {name}
                </div>
-               <p>Conta pessoal</p>
+               <p className="text-[1rem]">Conta pessoal</p>
             </div>
             <div className="comunity">
                {user.organization.length > 0 ? user.organization.map((item) => (

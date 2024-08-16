@@ -15,16 +15,14 @@ const CreateComunity = () => {
       <Dialog>
          <DialogTrigger className="createComunity w-full">
             <Plus width={15} />
-            <p>Criar comunidade</p>
+            <p className="text-[1rem]">Criar comunidade</p>
          </DialogTrigger>
          <DialogContent className="bg-[#19191a]">
             <DialogHeader>
                <DialogTitle className="font-semibold text-white text[3rem] py-[2.375rem] px-8">
                   <h1 className="text-[2rem] font-semibold">Criar organização</h1>
                </DialogTitle>
-               <DialogDescription>
-                  <Comunity />
-               </DialogDescription>
+               <Comunity />
             </DialogHeader>
          </DialogContent>
       </Dialog>
