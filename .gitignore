@@ -34,8 +34,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# vscode
-.vscode
+# IDE settings
+/.idea/
+/.fleet/
+/.vscode/
 
 # env
 .env

@@ -48,3 +48,4 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
 }
 
 export default UserCard
+

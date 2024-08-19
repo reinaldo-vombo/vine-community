@@ -91,7 +91,7 @@ VC/Vine Community developed using Next.js 14+ with a redesigned look transformed
 
 👉 **Form Management with React Hook Form**: Efficient management of forms with React Hook Form for a streamlined user input experience.
 
-and many more, including code architecture and reusability 
+and many more, including code architecture and reusability
 
 ## <a name="quick-start">🤸 Quick Start</a>
 
@@ -133,7 +133,7 @@ NEXT_CLERK_WEBHOOK_SECRET=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 ```
 
-Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up for the corresponding websites on [MongoDB](https://www.mongodb.com/), [Clerk](https://clerk.com/), and [Uploadthing](https://uploadthing.com/). 
+Replace the placeholder values with your actual credentials. You can obtain these credentials by signing up for the corresponding websites on [MongoDB](https://www.mongodb.com/), [Clerk](https://clerk.com/), and [Uploadthing](https://uploadthing.com/).
 
 **Running the Project**
 
@@ -155,19 +155,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 // Resource: https://docs.svix.com/receiving/verifying-payloads/why
 // It's a good practice to verify webhooks. Above article shows why we should do it
-import { Webhook, WebhookRequiredHeaders } from "svix";
-import { headers } from "next/headers";
+import { Webhook, WebhookRequiredHeaders } from "svix"
+import { headers } from "next/headers"
 
-import { IncomingHttpHeaders } from "http";
+import { IncomingHttpHeaders } from "http"
 
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"
 import {
   addMemberToCommunity,
   createCommunity,
   deleteCommunity,
   removeUserFromCommunity,
   updateCommunityInfo,
-} from "@/lib/actions/community.actions";
+} from "@/lib/actions/community.actions"
 
 // Resource: https://clerk.com/docs/integration/webhooks#supported-events
 // Above document lists the supported events
@@ -177,47 +177,46 @@ type EventType =
   | "organizationMembership.created"
   | "organizationMembership.deleted"
   | "organization.updated"
-  | "organization.deleted";
+  | "organization.deleted"
 
 type Event = {
-  data: Record<string, string | number | Record<string, string>[]>;
-  object: "event";
-  type: EventType;
-};
+  data: Record<string, string | number | Record<string, string>[]>
+  object: "event"
+  type: EventType
+}
 
 export const POST = async (request: Request) => {
-  const payload = await request.json();
-  const header = headers();
+  const payload = await request.json()
+  const header = headers()
 
   const heads = {
     "svix-id": header.get("svix-id"),
     "svix-timestamp": header.get("svix-timestamp"),
     "svix-signature": header.get("svix-signature"),
-  };
+  }
 
   // Activitate Webhook in the Clerk Dashboard.
   // After adding the endpoint, you'll see the secret on the right side.
-  const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOK_SECRET || "");
+  const wh = new Webhook(process.env.NEXT_CLERK_WEBHOOK_SECRET || "")
 
-  let evnt: Event | null = null;
+  let evnt: Event | null = null
 
   try {
     evnt = wh.verify(
       JSON.stringify(payload),
       heads as IncomingHttpHeaders & WebhookRequiredHeaders
-    ) as Event;
+    ) as Event
   } catch (err) {
-    return NextResponse.json({ message: err }, { status: 400 });
+    return NextResponse.json({ message: err }, { status: 400 })
   }
 
-  const eventType: EventType = evnt?.type!;
+  const eventType: EventType = evnt?.type!
 
   // Listen organization creation event
   if (eventType === "organization.created") {
     // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/CreateOrganization
     // Show what evnt?.data sends from above resource
-    const { id, name, slug, logo_url, image_url, created_by } =
-      evnt?.data ?? {};
+    const { id, name, slug, logo_url, image_url, created_by } = evnt?.data ?? {}
 
     try {
       // @ts-ignore
@@ -229,15 +228,15 @@ export const POST = async (request: Request) => {
         logo_url || image_url,
         "org bio",
         created_by
-      );
+      )
 
-      return NextResponse.json({ message: "User created" }, { status: 201 });
+      return NextResponse.json({ message: "User created" }, { status: 201 })
     } catch (err) {
-      console.log(err);
+      console.log(err)
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
 
@@ -247,19 +246,19 @@ export const POST = async (request: Request) => {
   if (eventType === "organizationInvitation.created") {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organization-Invitations#operation/CreateOrganizationInvitation
-      console.log("Invitation created", evnt?.data);
+      console.log("Invitation created", evnt?.data)
 
       return NextResponse.json(
         { message: "Invitation created" },
         { status: 201 }
-      );
+      )
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
 
@@ -268,23 +267,23 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organization-Memberships#operation/CreateOrganizationMembership
       // Show what evnt?.data sends from above resource
-      const { organization, public_user_data } = evnt?.data;
-      console.log("created", evnt?.data);
+      const { organization, public_user_data } = evnt?.data
+      console.log("created", evnt?.data)
 
       // @ts-ignore
-      await addMemberToCommunity(organization.id, public_user_data.user_id);
+      await addMemberToCommunity(organization.id, public_user_data.user_id)
 
       return NextResponse.json(
         { message: "Invitation accepted" },
         { status: 201 }
-      );
+      )
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
 
@@ -293,20 +292,20 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organization-Memberships#operation/DeleteOrganizationMembership
       // Show what evnt?.data sends from above resource
-      const { organization, public_user_data } = evnt?.data;
-      console.log("removed", evnt?.data);
+      const { organization, public_user_data } = evnt?.data
+      console.log("removed", evnt?.data)
 
       // @ts-ignore
-      await removeUserFromCommunity(public_user_data.user_id, organization.id);
+      await removeUserFromCommunity(public_user_data.user_id, organization.id)
 
-      return NextResponse.json({ message: "Member removed" }, { status: 201 });
+      return NextResponse.json({ message: "Member removed" }, { status: 201 })
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
 
@@ -315,20 +314,20 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/UpdateOrganization
       // Show what evnt?.data sends from above resource
-      const { id, logo_url, name, slug } = evnt?.data;
-      console.log("updated", evnt?.data);
+      const { id, logo_url, name, slug } = evnt?.data
+      console.log("updated", evnt?.data)
 
       // @ts-ignore
-      await updateCommunityInfo(id, name, slug, logo_url);
+      await updateCommunityInfo(id, name, slug, logo_url)
 
-      return NextResponse.json({ message: "Member removed" }, { status: 201 });
+      return NextResponse.json({ message: "Member removed" }, { status: 201 })
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
 
@@ -337,26 +336,26 @@ export const POST = async (request: Request) => {
     try {
       // Resource: https://clerk.com/docs/reference/backend-api/tag/Organizations#operation/DeleteOrganization
       // Show what evnt?.data sends from above resource
-      const { id } = evnt?.data;
-      console.log("deleted", evnt?.data);
+      const { id } = evnt?.data
+      console.log("deleted", evnt?.data)
 
       // @ts-ignore
-      await deleteCommunity(id);
+      await deleteCommunity(id)
 
       return NextResponse.json(
         { message: "Organization deleted" },
         { status: 201 }
-      );
+      )
     } catch (err) {
-      console.log(err);
+      console.log(err)
 
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }
-      );
+      )
     }
   }
-};
+}
 ```
 
 </details>
@@ -365,15 +364,15 @@ export const POST = async (request: Request) => {
 <summary><code>community.actions.ts</code></summary>
 
 ```typescript
-"use server";
+"use server"
 
-import { FilterQuery, SortOrder } from "mongoose";
+import { FilterQuery, SortOrder } from "mongoose"
 
-import Community from "../models/community.model";
-import Thread from "../models/thread.model";
-import User from "../models/user.model";
+import Community from "../models/community.model"
+import Thread from "../models/thread.model"
+import User from "../models/user.model"
 
-import { connectToDB } from "../mongoose";
+import { connectToDB } from "../mongoose"
 
 export async function createCommunity(
   id: string,
@@ -384,13 +383,13 @@ export async function createCommunity(
   createdById: string // Change the parameter name to reflect it's an id
 ) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find the user with the provided unique id
-    const user = await User.findOne({ id: createdById });
+    const user = await User.findOne({ id: createdById })
 
     if (!user) {
-      throw new Error("User not found"); // Handle the case if the user with the id is not found
+      throw new Error("User not found") // Handle the case if the user with the id is not found
     }
 
     const newCommunity = new Community({
@@ -400,25 +399,25 @@ export async function createCommunity(
       image,
       bio,
       createdBy: user._id, // Use the mongoose ID of the user
-    });
+    })
 
-    const createdCommunity = await newCommunity.save();
+    const createdCommunity = await newCommunity.save()
 
     // Update User model
-    user.communities.push(createdCommunity._id);
-    await user.save();
+    user.communities.push(createdCommunity._id)
+    await user.save()
 
-    return createdCommunity;
+    return createdCommunity
   } catch (error) {
     // Handle any errors
-    console.error("Error creating community:", error);
-    throw error;
+    console.error("Error creating community:", error)
+    throw error
   }
 }
 
 export async function fetchCommunityDetails(id: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     const communityDetails = await Community.findOne({ id }).populate([
       "createdBy",
@@ -427,19 +426,19 @@ export async function fetchCommunityDetails(id: string) {
         model: User,
         select: "name username image _id id",
       },
-    ]);
+    ])
 
-    return communityDetails;
+    return communityDetails
   } catch (error) {
     // Handle any errors
-    console.error("Error fetching community details:", error);
-    throw error;
+    console.error("Error fetching community details:", error)
+    throw error
   }
 }
 
 export async function fetchCommunityPosts(id: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     const communityPosts = await Community.findById(id).populate({
       path: "threads",
@@ -460,13 +459,13 @@ export async function fetchCommunityPosts(id: string) {
           },
         },
       ],
-    });
+    })
 
-    return communityPosts;
+    return communityPosts
   } catch (error) {
     // Handle any errors
-    console.error("Error fetching community posts:", error);
-    throw error;
+    console.error("Error fetching community posts:", error)
+    throw error
   }
 }
 
@@ -476,53 +475,50 @@ export async function fetchCommunities({
   pageSize = 20,
   sortBy = "desc",
 }: {
-  searchString?: string;
-  pageNumber?: number;
-  pageSize?: number;
-  sortBy?: SortOrder;
+  searchString?: string
+  pageNumber?: number
+  pageSize?: number
+  sortBy?: SortOrder
 }) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Calculate the number of communities to skip based on the page number and page size.
-    const skipAmount = (pageNumber - 1) * pageSize;
+    const skipAmount = (pageNumber - 1) * pageSize
 
     // Create a case-insensitive regular expression for the provided search string.
-    const regex = new RegExp(searchString, "i");
+    const regex = new RegExp(searchString, "i")
 
     // Create an initial query object to filter communities.
-    const query: FilterQuery<typeof Community> = {};
+    const query: FilterQuery<typeof Community> = {}
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
     if (searchString.trim() !== "") {
-      query.$or = [
-        { username: { $regex: regex } },
-        { name: { $regex: regex } },
-      ];
+      query.$or = [{ username: { $regex: regex } }, { name: { $regex: regex } }]
     }
 
     // Define the sort options for the fetched communities based on createdAt field and provided sort order.
-    const sortOptions = { createdAt: sortBy };
+    const sortOptions = { createdAt: sortBy }
 
     // Create a query to fetch the communities based on the search and sort criteria.
     const communitiesQuery = Community.find(query)
       .sort(sortOptions)
       .skip(skipAmount)
       .limit(pageSize)
-      .populate("members");
+      .populate("members")
 
     // Count the total number of communities that match the search criteria (without pagination).
-    const totalCommunitiesCount = await Community.countDocuments(query);
+    const totalCommunitiesCount = await Community.countDocuments(query)
 
-    const communities = await communitiesQuery.exec();
+    const communities = await communitiesQuery.exec()
 
     // Check if there are more communities beyond the current page.
-    const isNext = totalCommunitiesCount > skipAmount + communities.length;
+    const isNext = totalCommunitiesCount > skipAmount + communities.length
 
-    return { communities, isNext };
+    return { communities, isNext }
   } catch (error) {
-    console.error("Error fetching communities:", error);
-    throw error;
+    console.error("Error fetching communities:", error)
+    throw error
   }
 }
 
@@ -531,40 +527,40 @@ export async function addMemberToCommunity(
   memberId: string
 ) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find the community by its unique id
-    const community = await Community.findOne({ id: communityId });
+    const community = await Community.findOne({ id: communityId })
 
     if (!community) {
-      throw new Error("Community not found");
+      throw new Error("Community not found")
     }
 
     // Find the user by their unique id
-    const user = await User.findOne({ id: memberId });
+    const user = await User.findOne({ id: memberId })
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("User not found")
     }
 
     // Check if the user is already a member of the community
     if (community.members.includes(user._id)) {
-      throw new Error("User is already a member of the community");
+      throw new Error("User is already a member of the community")
     }
 
     // Add the user's _id to the members array in the community
-    community.members.push(user._id);
-    await community.save();
+    community.members.push(user._id)
+    await community.save()
 
     // Add the community's _id to the communities array in the user
-    user.communities.push(community._id);
-    await user.save();
+    user.communities.push(community._id)
+    await user.save()
 
-    return community;
+    return community
   } catch (error) {
     // Handle any errors
-    console.error("Error adding member to community:", error);
-    throw error;
+    console.error("Error adding member to community:", error)
+    throw error
   }
 }
 
@@ -573,39 +569,39 @@ export async function removeUserFromCommunity(
   communityId: string
 ) {
   try {
-    connectToDB();
+    connectToDB()
 
-    const userIdObject = await User.findOne({ id: userId }, { _id: 1 });
+    const userIdObject = await User.findOne({ id: userId }, { _id: 1 })
     const communityIdObject = await Community.findOne(
       { id: communityId },
       { _id: 1 }
-    );
+    )
 
     if (!userIdObject) {
-      throw new Error("User not found");
+      throw new Error("User not found")
     }
 
     if (!communityIdObject) {
-      throw new Error("Community not found");
+      throw new Error("Community not found")
     }
 
     // Remove the user's _id from the members array in the community
     await Community.updateOne(
       { _id: communityIdObject._id },
       { $pull: { members: userIdObject._id } }
-    );
+    )
 
     // Remove the community's _id from the communities array in the user
     await User.updateOne(
       { _id: userIdObject._id },
       { $pull: { communities: communityIdObject._id } }
-    );
+    )
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
     // Handle any errors
-    console.error("Error removing user from community:", error);
-    throw error;
+    console.error("Error removing user from community:", error)
+    throw error
   }
 }
 
@@ -616,57 +612,57 @@ export async function updateCommunityInfo(
   image: string
 ) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find the community by its _id and update the information
     const updatedCommunity = await Community.findOneAndUpdate(
       { id: communityId },
       { name, username, image }
-    );
+    )
 
     if (!updatedCommunity) {
-      throw new Error("Community not found");
+      throw new Error("Community not found")
     }
 
-    return updatedCommunity;
+    return updatedCommunity
   } catch (error) {
     // Handle any errors
-    console.error("Error updating community information:", error);
-    throw error;
+    console.error("Error updating community information:", error)
+    throw error
   }
 }
 
 export async function deleteCommunity(communityId: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find the community by its ID and delete it
     const deletedCommunity = await Community.findOneAndDelete({
       id: communityId,
-    });
+    })
 
     if (!deletedCommunity) {
-      throw new Error("Community not found");
+      throw new Error("Community not found")
     }
 
     // Delete all threads associated with the community
-    await Thread.deleteMany({ community: communityId });
+    await Thread.deleteMany({ community: communityId })
 
     // Find all users who are part of the community
-    const communityUsers = await User.find({ communities: communityId });
+    const communityUsers = await User.find({ communities: communityId })
 
     // Remove the community from the 'communities' array for each user
     const updateUserPromises = communityUsers.map((user) => {
-      user.communities.pull(communityId);
-      return user.save();
-    });
+      user.communities.pull(communityId)
+      return user.save()
+    })
 
-    await Promise.all(updateUserPromises);
+    await Promise.all(updateUserPromises)
 
-    return deletedCommunity;
+    return deletedCommunity
   } catch (error) {
-    console.error("Error deleting community: ", error);
-    throw error;
+    console.error("Error deleting community: ", error)
+    throw error
   }
 }
 ```
@@ -789,19 +785,19 @@ export const sidebarLinks = [
     route: "/profile",
     label: "Profile",
   },
-];
+]
 
 export const profileTabs = [
   { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
   { value: "replies", label: "Replies", icon: "/assets/members.svg" },
   { value: "tagged", label: "Tagged", icon: "/assets/tag.svg" },
-];
+]
 
 export const communityTabs = [
   { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
   { value: "members", label: "Members", icon: "/assets/members.svg" },
   { value: "requests", label: "Requests", icon: "/assets/request.svg" },
-];
+]
 ```
 
 </details>
@@ -1008,9 +1004,9 @@ const nextConfig = {
       ignoreBuildErrors: true,
     },
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
 ```
 
 </details>
@@ -1234,7 +1230,7 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
+}
 ```
 
 </details>
@@ -1243,21 +1239,21 @@ module.exports = {
 <summary><code>thread.actions.ts</code></summary>
 
 ```typescript
-"use server";
+"use server"
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from "next/cache"
 
-import { connectToDB } from "../mongoose";
+import { connectToDB } from "../mongoose"
 
-import User from "../models/user.model";
-import Thread from "../models/thread.model";
-import Community from "../models/community.model";
+import User from "../models/user.model"
+import Thread from "../models/thread.model"
+import Community from "../models/community.model"
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
-  connectToDB();
+  connectToDB()
 
   // Calculate the number of posts to skip based on the page number and page size.
-  const skipAmount = (pageNumber - 1) * pageSize;
+  const skipAmount = (pageNumber - 1) * pageSize
 
   // Create a query to fetch the posts that have no parent (top-level threads) (a thread that is not a comment/reply).
   const postsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
@@ -1279,92 +1275,96 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
         model: User,
         select: "_id name parentId image", // Select only _id and username fields of the author
       },
-    });
+    })
 
   // Count the total number of top-level posts (threads) i.e., threads that are not comments.
   const totalPostsCount = await Thread.countDocuments({
     parentId: { $in: [null, undefined] },
-  }); // Get the total count of posts
+  }) // Get the total count of posts
 
-  const posts = await postsQuery.exec();
+  const posts = await postsQuery.exec()
 
-  const isNext = totalPostsCount > skipAmount + posts.length;
+  const isNext = totalPostsCount > skipAmount + posts.length
 
-  return { posts, isNext };
+  return { posts, isNext }
 }
 
 interface Params {
-  text: string,
-  author: string,
-  communityId: string | null,
-  path: string,
+  text: string
+  author: string
+  communityId: string | null
+  path: string
 }
 
-export async function createThread({ text, author, communityId, path }: Params
-) {
+export async function createThread({
+  text,
+  author,
+  communityId,
+  path,
+}: Params) {
   try {
-    connectToDB();
+    connectToDB()
 
     const communityIdObject = await Community.findOne(
       { id: communityId },
       { _id: 1 }
-    );
+    )
 
     const createdThread = await Thread.create({
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
-    });
+    })
 
     // Update User model
     await User.findByIdAndUpdate(author, {
       $push: { threads: createdThread._id },
-    });
+    })
 
     if (communityIdObject) {
       // Update Community model
       await Community.findByIdAndUpdate(communityIdObject, {
         $push: { threads: createdThread._id },
-      });
+      })
     }
 
-    revalidatePath(path);
+    revalidatePath(path)
   } catch (error: any) {
-    throw new Error(`Failed to create thread: ${error.message}`);
+    throw new Error(`Failed to create thread: ${error.message}`)
   }
 }
 
 async function fetchAllChildThreads(threadId: string): Promise<any[]> {
-  const childThreads = await Thread.find({ parentId: threadId });
+  const childThreads = await Thread.find({ parentId: threadId })
 
-  const descendantThreads = [];
+  const descendantThreads = []
   for (const childThread of childThreads) {
-    const descendants = await fetchAllChildThreads(childThread._id);
-    descendantThreads.push(childThread, ...descendants);
+    const descendants = await fetchAllChildThreads(childThread._id)
+    descendantThreads.push(childThread, ...descendants)
   }
 
-  return descendantThreads;
+  return descendantThreads
 }
 
 export async function deleteThread(id: string, path: string): Promise<void> {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find the thread to be deleted (the main thread)
-    const mainThread = await Thread.findById(id).populate("author community");
+    const mainThread = await Thread.findById(id).populate("author community")
 
     if (!mainThread) {
-      throw new Error("Thread not found");
+      throw new Error("Thread not found")
     }
 
     // Fetch all child threads and their descendants recursively
-    const descendantThreads = await fetchAllChildThreads(id);
+    const descendantThreads = await fetchAllChildThreads(id)
 
     // Get all descendant thread IDs including the main thread ID and child thread IDs
     const descendantThreadIds = [
       id,
       ...descendantThreads.map((thread) => thread._id),
-    ];
+    ]
 
     // Extract the authorIds and communityIds to update User and Community models respectively
     const uniqueAuthorIds = new Set(
@@ -1372,38 +1372,38 @@ export async function deleteThread(id: string, path: string): Promise<void> {
         ...descendantThreads.map((thread) => thread.author?._id?.toString()), // Use optional chaining to handle possible undefined values
         mainThread.author?._id?.toString(),
       ].filter((id) => id !== undefined)
-    );
+    )
 
     const uniqueCommunityIds = new Set(
       [
         ...descendantThreads.map((thread) => thread.community?._id?.toString()), // Use optional chaining to handle possible undefined values
         mainThread.community?._id?.toString(),
       ].filter((id) => id !== undefined)
-    );
+    )
 
     // Recursively delete child threads and their descendants
-    await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
+    await Thread.deleteMany({ _id: { $in: descendantThreadIds } })
 
     // Update User model
     await User.updateMany(
       { _id: { $in: Array.from(uniqueAuthorIds) } },
       { $pull: { threads: { $in: descendantThreadIds } } }
-    );
+    )
 
     // Update Community model
     await Community.updateMany(
       { _id: { $in: Array.from(uniqueCommunityIds) } },
       { $pull: { threads: { $in: descendantThreadIds } } }
-    );
+    )
 
-    revalidatePath(path);
+    revalidatePath(path)
   } catch (error: any) {
-    throw new Error(`Failed to delete thread: ${error.message}`);
+    throw new Error(`Failed to delete thread: ${error.message}`)
   }
 }
 
 export async function fetchThreadById(threadId: string) {
-  connectToDB();
+  connectToDB()
 
   try {
     const thread = await Thread.findById(threadId)
@@ -1436,12 +1436,12 @@ export async function fetchThreadById(threadId: string) {
           },
         ],
       })
-      .exec();
+      .exec()
 
-    return thread;
+    return thread
   } catch (err) {
-    console.error("Error while fetching thread:", err);
-    throw new Error("Unable to fetch thread");
+    console.error("Error while fetching thread:", err)
+    throw new Error("Unable to fetch thread")
   }
 }
 
@@ -1451,14 +1451,14 @@ export async function addCommentToThread(
   userId: string,
   path: string
 ) {
-  connectToDB();
+  connectToDB()
 
   try {
     // Find the original thread by its ID
-    const originalThread = await Thread.findById(threadId);
+    const originalThread = await Thread.findById(threadId)
 
     if (!originalThread) {
-      throw new Error("Thread not found");
+      throw new Error("Thread not found")
     }
 
     // Create the new comment thread
@@ -1466,21 +1466,21 @@ export async function addCommentToThread(
       text: commentText,
       author: userId,
       parentId: threadId, // Set the parentId to the original thread's ID
-    });
+    })
 
     // Save the comment thread to the database
-    const savedCommentThread = await commentThread.save();
+    const savedCommentThread = await commentThread.save()
 
     // Add the comment thread's ID to the original thread's children array
-    originalThread.children.push(savedCommentThread._id);
+    originalThread.children.push(savedCommentThread._id)
 
     // Save the updated original thread to the database
-    await originalThread.save();
+    await originalThread.save()
 
-    revalidatePath(path);
+    revalidatePath(path)
   } catch (err) {
-    console.error("Error while adding comment:", err);
-    throw new Error("Unable to add comment");
+    console.error("Error while adding comment:", err)
+    throw new Error("Unable to add comment")
   }
 }
 ```
@@ -1494,11 +1494,12 @@ export async function addCommentToThread(
 // Resource: https://docs.uploadthing.com/api-reference/react#generatereacthelpers
 // Copy paste (be careful with imports)
 
-import { generateReactHelpers } from "@uploadthing/react/hooks";
+import { generateReactHelpers } from "@uploadthing/react/hooks"
 
-import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import type { OurFileRouter } from "@/app/api/uploadthing/core"
 
-export const { useUploadThing, uploadFiles } = generateReactHelpers<OurFileRouter>();
+export const { useUploadThing, uploadFiles } =
+  generateReactHelpers<OurFileRouter>()
 ```
 
 </details>
@@ -1507,37 +1508,37 @@ export const { useUploadThing, uploadFiles } = generateReactHelpers<OurFileRoute
 <summary><code>user.actions.ts</code></summary>
 
 ```typescript
-"use server";
+"use server"
 
-import { FilterQuery, SortOrder } from "mongoose";
-import { revalidatePath } from "next/cache";
+import { FilterQuery, SortOrder } from "mongoose"
+import { revalidatePath } from "next/cache"
 
-import Community from "../models/community.model";
-import Thread from "../models/thread.model";
-import User from "../models/user.model";
+import Community from "../models/community.model"
+import Thread from "../models/thread.model"
+import User from "../models/user.model"
 
-import { connectToDB } from "../mongoose";
+import { connectToDB } from "../mongoose"
 
 export async function fetchUser(userId: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     return await User.findOne({ id: userId }).populate({
       path: "communities",
       model: Community,
-    });
+    })
   } catch (error: any) {
-    throw new Error(`Failed to fetch user: ${error.message}`);
+    throw new Error(`Failed to fetch user: ${error.message}`)
   }
 }
 
 interface Params {
-  userId: string;
-  username: string;
-  name: string;
-  bio: string;
-  image: string;
-  path: string;
+  userId: string
+  username: string
+  name: string
+  bio: string
+  image: string
+  path: string
 }
 
 export async function updateUser({
@@ -1549,7 +1550,7 @@ export async function updateUser({
   image,
 }: Params): Promise<void> {
   try {
-    connectToDB();
+    connectToDB()
 
     await User.findOneAndUpdate(
       { id: userId },
@@ -1561,19 +1562,19 @@ export async function updateUser({
         onboarded: true,
       },
       { upsert: true }
-    );
+    )
 
     if (path === "/profile/edit") {
-      revalidatePath(path);
+      revalidatePath(path)
     }
   } catch (error: any) {
-    throw new Error(`Failed to create/update user: ${error.message}`);
+    throw new Error(`Failed to create/update user: ${error.message}`)
   }
 }
 
 export async function fetchUserPosts(userId: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find all threads authored by the user with the given userId
     const threads = await User.findOne({ id: userId }).populate({
@@ -1595,11 +1596,11 @@ export async function fetchUserPosts(userId: string) {
           },
         },
       ],
-    });
-    return threads;
+    })
+    return threads
   } catch (error) {
-    console.error("Error fetching user threads:", error);
-    throw error;
+    console.error("Error fetching user threads:", error)
+    throw error
   }
 }
 
@@ -1611,68 +1612,65 @@ export async function fetchUsers({
   pageSize = 20,
   sortBy = "desc",
 }: {
-  userId: string;
-  searchString?: string;
-  pageNumber?: number;
-  pageSize?: number;
-  sortBy?: SortOrder;
+  userId: string
+  searchString?: string
+  pageNumber?: number
+  pageSize?: number
+  sortBy?: SortOrder
 }) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Calculate the number of users to skip based on the page number and page size.
-    const skipAmount = (pageNumber - 1) * pageSize;
+    const skipAmount = (pageNumber - 1) * pageSize
 
     // Create a case-insensitive regular expression for the provided search string.
-    const regex = new RegExp(searchString, "i");
+    const regex = new RegExp(searchString, "i")
 
     // Create an initial query object to filter users.
     const query: FilterQuery<typeof User> = {
       id: { $ne: userId }, // Exclude the current user from the results.
-    };
+    }
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
     if (searchString.trim() !== "") {
-      query.$or = [
-        { username: { $regex: regex } },
-        { name: { $regex: regex } },
-      ];
+      query.$or = [{ username: { $regex: regex } }, { name: { $regex: regex } }]
     }
 
     // Define the sort options for the fetched users based on createdAt field and provided sort order.
-    const sortOptions = { createdAt: sortBy };
+    const sortOptions = { createdAt: sortBy }
 
     const usersQuery = User.find(query)
       .sort(sortOptions)
       .skip(skipAmount)
-      .limit(pageSize);
+      .limit(pageSize)
 
     // Count the total number of users that match the search criteria (without pagination).
-    const totalUsersCount = await User.countDocuments(query);
+    const totalUsersCount = await User.countDocuments(query)
 
-    const users = await usersQuery.exec();
+    const users = await usersQuery.exec()
 
     // Check if there are more users beyond the current page.
-    const isNext = totalUsersCount > skipAmount + users.length;
+    const isNext = totalUsersCount > skipAmount + users.length
 
-    return { users, isNext };
+    return { users, isNext }
   } catch (error) {
-    console.error("Error fetching users:", error);
-    throw error;
+    console.error("Error fetching users:", error)
+    throw error
   }
 }
 
 export async function getActivity(userId: string) {
   try {
-    connectToDB();
+    connectToDB()
 
     // Find all threads created by the user
-    const userThreads = await Thread.find({ author: userId });
+    const userThreads = await Thread.find({ author: userId })
 
     // Collect all the child thread ids (replies) from the 'children' field of each user thread
     const childThreadIds = userThreads.reduce((acc, userThread) => {
-      return acc.concat(userThread.children);
-    }, []);
+      return acc.concat(userThread.children)
+    }, [])
 
     // Find and return the child threads (replies) excluding the ones created by the same user
     const replies = await Thread.find({
@@ -1682,12 +1680,12 @@ export async function getActivity(userId: string) {
       path: "author",
       model: User,
       select: "name image _id",
-    });
+    })
 
-    return replies;
+    return replies
   } catch (error) {
-    console.error("Error fetching replies: ", error);
-    throw error;
+    console.error("Error fetching replies: ", error)
+    throw error
   }
 }
 ```
@@ -1698,18 +1696,18 @@ export async function getActivity(userId: string) {
 <summary><code>utils.ts</code></summary>
 
 ```typescript
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 // generated by shadcn
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 // created by chatgpt
 export function isBase64Image(imageData: string) {
-  const base64Regex = /^data:image\/(png|jpe?g|gif|webp);base64,/;
-  return base64Regex.test(imageData);
+  const base64Regex = /^data:image\/(png|jpe?g|gif|webp);base64,/
+  return base64Regex.test(imageData)
 }
 
 // created by chatgpt
@@ -1718,27 +1716,27 @@ export function formatDateString(dateString: string) {
     year: "numeric",
     month: "short",
     day: "numeric",
-  };
+  }
 
-  const date = new Date(dateString);
-  const formattedDate = date.toLocaleDateString(undefined, options);
+  const date = new Date(dateString)
+  const formattedDate = date.toLocaleDateString(undefined, options)
 
   const time = date.toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",
-  });
+  })
 
-  return `${time} - ${formattedDate}`;
+  return `${time} - ${formattedDate}`
 }
 
 // created by chatgpt
 export function formatThreadCount(count: number): string {
   if (count === 0) {
-    return "No Threads";
+    return "No Threads"
   } else {
-    const threadCount = count.toString().padStart(2, "0");
-    const threadWord = count === 1 ? "Thread" : "Threads";
-    return `${threadCount} ${threadWord}`;
+    const threadCount = count.toString().padStart(2, "0")
+    const threadWord = count === 1 ? "Thread" : "Threads"
+    return `${threadCount} ${threadWord}`
   }
 }
 ```
